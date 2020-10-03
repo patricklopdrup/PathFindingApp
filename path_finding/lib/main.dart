@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_finding/canvas.dart';
+import 'package:path_finding/canvasControl.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +25,12 @@ class MyHomePage extends StatelessWidget {
         title: Text('Path finding'),
         centerTitle: true,
       ),
-      body: MyCanvas(),
+      body: Column(
+        children: [
+          MyCanvas(),
+          CanvasControl(),
+        ],
+      ),
     );
   }
 }
