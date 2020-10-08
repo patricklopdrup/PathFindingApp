@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:path_finding/cell.dart';
+import 'package:path_finding/data.dart';
 
-int rows = 15;
-int cols = 10;
 double dx, dy = -1;
 double padding = 10;
 Cell cell = Cell();
-List<Cell> cellList = List();
 
 class MyCanvas extends StatefulWidget {
   @override
@@ -34,7 +32,7 @@ class _MyCanvasState extends State<MyCanvas> {
             setState(() {
               dx = details.globalPosition.dx;
               dy = details.globalPosition.dy;
-              print('hej $dx, $dy');
+              //print('hej $dx, $dy');
             });
           },
         ),
@@ -47,46 +45,41 @@ class MyPainter extends CustomPainter {
   double x, y;
   MyPainter(this.x, this.y);
 
-  // Generate 2d list
-  List grid = List.generate(cols, (index) => List(rows));
-
   @override
   void paint(Canvas canvas, Size size) {
-    print("hello");
-    double cellWidth = size.width / cols;
-    double cellHeight = size.height / rows;
+    double cellWidth = size.width / CellData.colValue;
+    double cellHeight = size.height / CellData.rowValue;
 
     int cellX = (x - padding) ~/ cellWidth;
     // Appbar is 80 pixel
     int cellY = (y - padding - 80) ~/ cellHeight;
 
     // Making grid of cells
-    for (int col = 0; col < cols; col++) {
-      for (int row = 0; row < rows; row++) {
-        grid[col][row] = Cell(x: col, y: row);
+    for (int col = 0; col < CellData.colValue; col++) {
+      for (int row = 0; row < CellData.rowValue; row++) {
+        CellData.grid[col][row] = Cell(x: col, y: row);
       }
     }
 
     // Draw startCell
-    Cell startCell = grid[0][0];
+    Cell startCell = CellData.grid[0][0];
     canvas.drawRect(
         Rect.fromLTWH(0, 0, cellWidth, cellHeight), startCell.startPaint());
 
     // Draw endCell
-    Cell endCell = grid[cols - 1][rows - 1];
+    Cell endCell = CellData.grid[CellData.colValue - 1][CellData.rowValue - 1];
     canvas.drawRect(
         Rect.fromLTWH(endCell.x * cellWidth, endCell.y * cellHeight, cellWidth, cellHeight), endCell.endPaing());
 
 
-    Cell temp = grid[cellX][cellY];
-    print(temp);
+    Cell temp = CellData.grid[cellX][cellY];
+    //print(temp);
     // Adding cell to global list
-    cellList.add(temp);
+    CellData.cellList.add(temp);
 
     // Drawing all cells in list
-    if (cellList.length > 0) {
-      for (cell in cellList) {
-        print('$cell');
+    if (CellData.cellList.length > 0) {
+      for (cell in CellData.cellList) {
         canvas.drawRect(
             Rect.fromLTWH(
                 cell.x * cellWidth, cell.y * cellHeight, cellWidth, cellHeight),
@@ -100,12 +93,12 @@ class MyPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     // Draw rows
-    for (int i = 0; i < rows; i++) {
+    for (int i = 0; i < CellData.rowValue; i++) {
       canvas.drawLine(Offset(0, i * cellHeight),
           Offset(size.height, i * cellHeight), drawGrid);
     }
     // Draw cols
-    for (int j = 0; j < cols; j++) {
+    for (int j = 0; j < CellData.colValue; j++) {
       canvas.drawLine(Offset(j * cellWidth, 0),
           Offset(j * cellWidth, size.width), drawGrid);
     }
