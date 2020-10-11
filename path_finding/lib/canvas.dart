@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:path_finding/cell.dart';
 import 'package:path_finding/data.dart';
 
-double dx, dy = -1;
+double dx, dy;
 double padding = 10;
 Cell cell = Cell();
+int count = 0;
 
 class MyCanvas extends StatefulWidget {
   @override
@@ -49,11 +50,16 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double cellWidth = size.width / CellData.colValue;
     double cellHeight = size.height / CellData.rowValue;
+    print("x er $x");
+    print("count ${count++}");
 
-    int cellX = (x - padding) ~/ cellWidth;
-    // Appbar is 80 pixel
-    int cellY = (y - padding - 80) ~/ cellHeight;
-
+    int cellX;
+    int cellY;
+    if (x != null) {
+      cellX = (x - padding) ~/ cellWidth;
+      // Appbar is 80 pixel
+      cellY = (y - padding - 80) ~/ cellHeight;
+    }
     // Making grid of cells
     for (int col = 0; col < CellData.colValue; col++) {
       for (int row = 0; row < CellData.rowValue; row++) {
@@ -69,13 +75,17 @@ class MyPainter extends CustomPainter {
     // Draw endCell
     Cell endCell = CellData.grid[CellData.colValue - 1][CellData.rowValue - 1];
     canvas.drawRect(
-        Rect.fromLTWH(endCell.x * cellWidth, endCell.y * cellHeight, cellWidth, cellHeight), endCell.endPaing());
+        Rect.fromLTWH(endCell.x * cellWidth, endCell.y * cellHeight, cellWidth,
+            cellHeight),
+        endCell.endPaing());
 
-
-    Cell temp = CellData.grid[cellX][cellY];
-    //print(temp);
-    // Adding cell to global list
-    CellData.cellList.add(temp);
+    if (x != null) {
+      print("er her $x,$y");
+      Cell temp = CellData.grid[cellX][cellY];
+      // Adding cell to global list
+      CellData.cellList.add(temp);
+    }
+    CellData.onClear = false;
 
     // Drawing all cells in list
     if (CellData.cellList.length > 0) {
@@ -86,7 +96,6 @@ class MyPainter extends CustomPainter {
             cell.paint());
       }
     }
-
     final drawGrid = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke

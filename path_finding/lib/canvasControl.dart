@@ -44,9 +44,7 @@ class _CanvasControlState extends State<CanvasControl> {
               Expanded(
                 child: MaterialButton(
                   onPressed: () {
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -128,8 +126,8 @@ class _CanvasControlState extends State<CanvasControl> {
                   setState(() => CellData.rowValue = newValue.round());
                 },
                 min: 0,
-                max: 50,
-                divisions: 50,
+                max: CellData.maxValue.toDouble(),
+                divisions: CellData.maxValue,
                 label: "${CellData.rowValue}",
               ),
             ],
@@ -141,6 +139,6 @@ class _CanvasControlState extends State<CanvasControl> {
 
   void clearWalls() {
     CellData.cellList.clear();
+    CellData.onClear = true;
   }
-
 }
