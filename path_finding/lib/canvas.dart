@@ -80,10 +80,13 @@ class MyPainter extends CustomPainter {
         endCell.endPaing());
 
     if (x != null) {
-      print("er her $x,$y");
-      Cell temp = CellData.grid[cellX][cellY];
-      // Adding cell to global list
-      CellData.cellList.add(temp);
+      if (CellData.addWallButtonPressed) {
+        print("er her $x,$y");
+        Cell temp = CellData.grid[cellX][cellY];
+        temp.addWall();
+        // Adding cell to global list
+        CellData.cellList.add(temp);
+      }
     }
     CellData.onClear = false;
 

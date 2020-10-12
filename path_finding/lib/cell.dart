@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:path_finding/data.dart';
 
 class Cell {
   int x, y;
   int fVal, gVal, hVal;
-  double pctForWall = 20.0;
+  double pctForWall = 50.0;
   bool isWall;
   bool isGenerated = false;
 
@@ -21,7 +22,7 @@ class Cell {
   }
 
   Paint _generateSquare() {
-    if (calcIfWall(pctForWall)) {
+    if (_calcIfWall(pctForWall)) {
       this.isWall = true;
       return _wallPaint();
     } else {
@@ -30,9 +31,27 @@ class Cell {
     }
   }
 
-  bool calcIfWall(double pctForWall) {
+  void autoWall() {
+    if (_calcIfWall(pctForWall)) {
+      addWall();
+    }
+  }
+
+  void addWall() {
+    this.isWall = true;
+    this.isGenerated = true;
+    CellData.cellList.add(this);
+  }
+
+  bool _calcIfWall(double pctForWall) {
     var rng = Random();
     return rng.nextDouble() < (pctForWall / 100) ? true : false;
+  }
+
+  Paint _clearPaint() {
+    return Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
   }
 
   Paint _normPaint() {

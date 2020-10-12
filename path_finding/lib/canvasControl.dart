@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_finding/cell.dart';
 import 'package:path_finding/data.dart';
 
 class CanvasControl extends StatefulWidget {
@@ -7,7 +8,6 @@ class CanvasControl extends StatefulWidget {
 }
 
 class _CanvasControlState extends State<CanvasControl> {
-  bool addWallButtonPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _CanvasControlState extends State<CanvasControl> {
                 child: MaterialButton(
                   onPressed: () {
                     setState(() {
-                      addWallButtonPressed = !addWallButtonPressed;
+                      CellData.addWallButtonPressed = !CellData.addWallButtonPressed;
                     });
                   },
                   child: Padding(
@@ -35,7 +35,7 @@ class _CanvasControlState extends State<CanvasControl> {
                       ],
                     ),
                   ),
-                  color: addWallButtonPressed ? Colors.amber : Colors.white,
+                  color: CellData.addWallButtonPressed ? Colors.amber : Colors.white,
                   shape: Border.all(color: Colors.black),
                 ),
               ),
@@ -44,7 +44,9 @@ class _CanvasControlState extends State<CanvasControl> {
               Expanded(
                 child: MaterialButton(
                   onPressed: () {
-                    setState(() {});
+                    setState(() {
+                      generateAutoWalls();
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -135,6 +137,19 @@ class _CanvasControlState extends State<CanvasControl> {
         ],
       ),
     );
+  }
+
+  void generateAutoWalls() {
+    for (int col = 0; col < CellData.colValue; col++) {
+      for (int row = 0; row < CellData.rowValue; row++) {
+        // Don't change start- and end cell
+        if (!(col == 0 && row == 0) &&
+            !(col == CellData.colValue - 1 && row == CellData.rowValue - 1)) {
+          Cell temp = CellData.grid[col][row];
+          temp.autoWall();
+        }
+      }
+    }
   }
 
   void clearWalls() {

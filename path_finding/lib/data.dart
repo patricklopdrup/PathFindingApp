@@ -10,6 +10,9 @@ class CellData {
 
   static bool onClear;
 
+  // Add Wall button in canvasControl
+  static bool addWallButtonPressed = false;
+
   // The grid as a 2d list
   //static List grid = List.generate(colValue, (index) => List(rowValue), growable: true);
   static List grid =
